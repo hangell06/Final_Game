@@ -1,0 +1,37 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "": {
+            "scaleInDock": 1,
+            "scaleInEditor": 0.75
+        },
+        "#platformerPack_industrial_tilesheet": {
+            "scaleInEditor": 1
+        },
+        "#tilemap-characters_packed": {
+            "scaleInEditor": 1
+        },
+        "Lvl_one.tmx#platformerPack_industrial_tilesheet": {
+            "scaleInEditor": 1
+        },
+        "Lvl_one.tmx#tilemap_packed": {
+            "scaleInEditor": 0.75
+        }
+    },
+    "last.exportedFilePath": "C:/Users/holde/HANGELL_Platformer/assets",
+    "last.imagePath": "C:/Users/holde/HANGELL_Platformer/assets",
+    "map.lastUsedExportFilter": "All Files (*)",
+    "openFiles": [
+    ],
+    "project": "untitled.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+    ],
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 70,
+        "width": 70
+    }
+}

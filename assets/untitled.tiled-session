@@ -1,0 +1,67 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "Tilesheet/Lvl_one.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "#platformerPack_industrial_tilesheet": {
+            "scaleInEditor": 1
+        },
+        "#tilemap-characters_packed": {
+            "scaleInEditor": 1
+        },
+        "Lvl_one.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 814,
+                "y": 773
+            }
+        },
+        "Lvl_one.tmx#platformerPack_industrial_tilesheet": {
+            "scaleInDock": 0.5,
+            "scaleInEditor": 1
+        },
+        "Lvl_one.tmx#tilemap_packed": {
+            "scaleInDock": 0.33,
+            "scaleInEditor": 0.75
+        },
+        "Tilesheet/Lvl_one.tmx": {
+            "scale": 0.25,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 76,
+                "y": 446
+            }
+        },
+        "Tilesheet/Lvl_one.tmx#platformerPack_industrial_tilesheet": {
+            "scaleInDock": 1
+        },
+        "Tilesheet/Lvl_one.tmx#tilemap_packed": {
+            "scaleInDock": 0.33
+        }
+    },
+    "last.exportedFilePath": "C:/Users/holde/HANGELL_Platformer/assets/Tilesheet",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 70,
+    "map.tileWidth": 70,
+    "map.width": 100,
+    "openFiles": [
+        "Tilesheet/Lvl_one.tmx"
+    ],
+    "project": "",
+    "recentFiles": [
+        "Tilesheet/Lvl_one.tmx",
+        "Lvl_one.tmx"
+    ]
+}
