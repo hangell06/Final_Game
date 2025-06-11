@@ -11,8 +11,11 @@ class Load extends Phaser.Scene {
 
         this.load.image("tiles_ind", "/Tilesheet/platformerPack_industrial_tilesheet.png");
         this.load.image("tiles_basic", "/Tilesheet/tilemap_packed.png");
+        this.load.image("tiles_mushroom", "/Tilesheet/Mushrooms.png");
+        this.load.image("background_mushroom", "/Tilesheet/bg_shroom.png");
 
         this.load.tilemapTiledJSON("lvl1", "/Tilesheet/Lvl_one.tmj");
+        this.load.tilemapTiledJSON("lvl2", "/Tilesheet/Lvl_two.tmj");
 
         this.load.spritesheet("tilemap_sheet", "/Tilesheet/tilemap_packed.png", {
             frameWidth: 70,
@@ -69,7 +72,7 @@ class Load extends Phaser.Scene {
 
 
 
-        this.scene.start("Scene");
+        this.scene.start("Scene_One");
     }
 
 

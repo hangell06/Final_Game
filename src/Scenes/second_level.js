@@ -1,25 +1,25 @@
-class Platformer extends Phaser.Scene {
+class second_level extends Phaser.Scene {
 
     constructor() {
-        super("Scene");
+        super("Scene_Two");
     }
 
     init() {
         // Physics
-        this.ACCELERATION = 500;
-        this.DRAG = 1250;
-        this.physics.world.gravity.y = 1500;
+        this.ACCELERATION = 600;
+        this.DRAG = 1500;
+        this.physics.world.gravity.y = 1400;
 
             // Velocity
-        this.JUMP_VELOCITY = -800;
-        this.MAX_VEL_X = 400;
-        this.MAX_VEL_Y = 1000;
+        this.JUMP_VELOCITY = -7500;
+        this.MAX_VEL_X = 500;
+        this.MAX_VEL_Y = 1200;
 
         // Particles
         this.PARTICLE_X_OFFSET = 16;
         this.PARTICLE_Y_OFFSET = 5;
-        this.PARTICLE_VELOCITY = 50;
-        this.PARTICLE_JUMP_TIME = 200;
+        this.PARTICLE_VELOCITY = 60;
+        this.PARTICLE_JUMP_TIME = 150;
         
 
         // Scale
@@ -48,6 +48,12 @@ class Platformer extends Phaser.Scene {
         // Wall jump factor
         this.WALL_JUMP_HORZ = 400;
 
+        // Game specific movements
+        this.MOVING_DOWN = true;
+
+        this.moving_platform = [];
+        this.MOVING_PLATFORM = false;
+
 
     }
 
@@ -67,7 +73,7 @@ class Platformer extends Phaser.Scene {
         // MAP
         //
         
-        this.map = this.add.tilemap("lvl1", this.TILE_SIZE, this.TILE_SIZE, this.TILE_WIDTH, this.TILE_HEIGHT);
+        this.map = this.add.tilemap("lvl2", this.TILE_SIZE, this.TILE_SIZE, this.TILE_WIDTH, this.TILE_HEIGHT);
         this.animatedTiles.init(this.map);
 
         // Physics
@@ -75,8 +81,9 @@ class Platformer extends Phaser.Scene {
         this.physics.world.TILE_BIAS = this.BIAS;
         
         // Tilesets
-        this.tileset_ind = this.map.addTilesetImage("platformerPack_industrial_tilesheet", "tiles_ind");
         this.tileset_basic = this.map.addTilesetImage("tilemap_packed", "tiles_basic");
+        this.tileset_mushroom = this.map.addTilesetImage("Mushrooms", "tiles_mushroom");
+        this.tileset_background = this.map.addTilesetImage("bg_shroom", "background_mushroom");
 
         // Music
         this.music = this.sound.add("main_music", {
@@ -86,14 +93,15 @@ class Platformer extends Phaser.Scene {
         this.music.play();
 
         // Layers
-        this.backgroundLayer = this.map.createLayer("Background", this.tileset_basic, 0, 0).setScale(this.SCALE).setScrollFactor(0.5).setAlpha(0.5);
+        this.backgroundLayer = this.map.createLayer("Background", this.tileset_background, 0, 0).setScale(this.SCALE).setScrollFactor(0.75).setAlpha(0.5);
+        this.backgroundLayer.x -= 10 // Stops clipping background at start
 
-        this.waterLayer = this.map.createLayer("Water", this.tileset_basic, 0, 0).setScale(this.SCALE);
-        
-        this.groundLayer = this.map.createLayer("Ground", this.tileset_ind, 0, 0).setScale(this.SCALE);
+        this.groundLayer = this.map.createLayer("Ground", this.tileset_basic, 0, 0).setScale(this.SCALE);
         this.groundLayer.setCollisionByProperty({ collides: true });
 
-        this.decorLayer = this.map.createLayer("Decor", this.tileset_ind, 0, 0).setScale(this.SCALE);
+        this.mushroomBackLayer = this.map.createLayer("Mushroom_Back", this.tileset_mushroom, 0, 0).setScale(this.SCALE);
+        this.mushroomForeLayer = this.map.createLayer("Mushroom_Fore", this.tileset_mushroom, 0, 0).setScale(this.SCALE);
+        this.mushroomForeLayer.setCollisionByProperty({ collides: true });
 
 
         // Collectibles
@@ -116,29 +124,53 @@ class Platformer extends Phaser.Scene {
         this.coinGroup = this.add.group(this.coins);
         this.anims.play('coinAnim', this.coins);
         this.physics.world.enable(this.coins, Phaser.Physics.Arcade.STATIC_BODY);
+
+
+        // Moving platform
+        this.groundLayer.forEachTile((tile) => {
+            if (tile.properties && tile.properties.moving) {
+                let sprite = this.physics.add.sprite(tile.getCenterX(), tile.getCenterY(), "tilemap_sheet",tile.index - 1).setScale(this.SCALE);
+                this.moving_platform.push(sprite);
+                this.groundLayer.removeTileAt(tile.x, tile.y);
+            }
+        });
+        this.moving_platform_group = this.physics.add.group(this.moving_platform); 
+        this.moving_platform_group.children.iterate(obj => {
+                obj.body.allowGravity = false;
+                obj.body.immovable = true;
+        });
+        
+        
         
 
         // Collision with properties
         let propertyCollider = (ob1, ob2) => {
             // Death Tiles
-            if(ob2.properties.danger){
-                my.sprite.player.setAccelerationX(0);   // Setting speed to zero
-                my.sprite.player.setVelocityX(0);
-                my.sprite.player.setAccelerationY(0);
-                my.sprite.player.setVelocityY(0);
+            if(ob2.properties){
+                if(ob2.properties.danger){
+                    my.sprite.player.setAccelerationX(0);   // Setting speed to zero
+                    my.sprite.player.setVelocityX(0);
+                    my.sprite.player.setAccelerationY(0);
+                    my.sprite.player.setVelocityY(0);
 
-                my.sprite.player.x = this.STARTING_X;   // Returning to beginning
-                my.sprite.player.y = this.STARTING_Y;
+                    my.sprite.player.x = this.STARTING_X;   // Returning to beginning
+                    my.sprite.player.y = this.STARTING_Y;
+                }
+
+                if(ob2.properties.end){
+                    this.music.pause();
+                    this.scene.start("ending");
+                }
             }
 
-            if(ob2.properties.end){
-                this.music.pause();
-                this.scene.start("ending");
+            if(!this.MOVING_PLATFORM && ob2.type == "Sprite"){
+                this.MOVING_PLATFORM = true;
             }
+
+
         }
 
-
-
+    
 
         // Player
         my.sprite.player = this.physics.add.sprite(this.STARTING_X, this.STARTING_Y, "characters","tile_0021.png").setScale(this.PLAYER_SCALE);
@@ -147,21 +179,24 @@ class Platformer extends Phaser.Scene {
 
         // Collision
         this.physics.add.collider(my.sprite.player, this.groundLayer, propertyCollider);
+        this.physics.add.collider(my.sprite.player, this.mushroomForeLayer, propertyCollider);
         this.physics.add.overlap(my.sprite.player, this.coinGroup, (ob1, ob2) => {
             this.sound.play("coin_sound", {volume: 0.75});
             ob2.destroy();
         });
+
+        this.physics.add.collider(my.sprite.player, this.moving_platform_group, propertyCollider);
 
 
 
         // Particles
         my.vfx.walking = this.add.particles(0, 0, "kenny-particles", {
             frame: ['smoke_07.png', 'smoke_08.png', 'smoke_09.png', 'smoke_10.png'],
-            scale: {start: 0.03, end: 0.15},
-            maxAliveParticles: 20,
+            scale: {start: 0.03, end: 0.1},
+            maxAliveParticles: 25,
             lifespan: 350,
-            gravityY: -600,
-            alpha: {start: 1, end: 0.1}
+            gravityY: -500,
+            alpha: {start: 0.5, end: 0.1}
        });
        my.vfx.walking.stop();
 
@@ -200,11 +235,35 @@ class Platformer extends Phaser.Scene {
         // Description
         document.getElementById('description').innerHTML = '<h2>Use the arrow keys to go left, right, and up!</h2>Click R to restart!';
         
-
     }
 
 
     update(){
+
+        // Moving mushrooms
+        if (this.MOVING_DOWN){
+            this.mushroomBackLayer.y += 2;
+            this.mushroomForeLayer.y += 2;
+            
+            if(this.mushroomBackLayer.y >= 250) this.MOVING_DOWN = false;
+        }
+        if (!this.MOVING_DOWN){
+            this.mushroomBackLayer.y -= 2;
+            this.mushroomForeLayer.y -= 2;
+            
+            if(this.mushroomBackLayer.y <= 0) this.MOVING_DOWN = true;
+        }
+
+        // Moving platform
+        if(this.MOVING_PLATFORM){
+            this.moving_platform_group.children.iterate(obj => {
+                obj.x += 2.5;
+            });
+        }
+        
+
+
+
 
         if(cursors.left.isDown) {
             // Player accelerating left
@@ -260,7 +319,6 @@ class Platformer extends Phaser.Scene {
 
         // Wall Jumping
         if(Phaser.Input.Keyboard.JustDown(cursors.up)){
-            console.log("hi");
             if(!my.sprite.player.body.blocked.down && (my.sprite.player.body.blocked.left || my.sprite.player.body.blocked.right)) {
                 this.jump();
                 if(my.sprite.player.body.blocked.left) my.sprite.player.body.setVelocityX(this.WALL_JUMP_HORZ);

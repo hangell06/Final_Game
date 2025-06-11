@@ -23,7 +23,7 @@ class end_screen extends Phaser.Scene {
     update() {
         if(Phaser.Input.Keyboard.JustDown(this.rKey)){
             this.music.pause();
-            this.scene.start("Scene");
+            this.scene.start("Scene_One");
         }
     }
 
