@@ -1,4 +1,4 @@
-**Hangell Platformer**
+**Hangell Final Game**
 
-For UCSC course CSE120 
+For UCSC course CMPM120 
 Spring, 2025
